@@ -14,28 +14,28 @@ struct Node {
 };
 
 Node* treeToList(Node* root) {
-  if ((*root).left == nullptr && (*root).right == nullptr) {
+  if (root->left == nullptr && root->right == nullptr) {
     return root;
   }
 
-  if ((*root).right != nullptr) {
-    Node* pointer = treeToList((*root).right);
+  if (root->right != nullptr) {
+    Node* pointer = treeToList(root->right);
 
-    (*pointer).left = root;
-    (*root).right = pointer;
+    pointer->left = root;
+    root->right = pointer;
   }
 
-  if ((*root).left != nullptr) {
-    Node* pointer = (*root).left;
+  if (root->left != nullptr) {
+    Node* pointer = root->left;
 
-    while ((*pointer).right != nullptr) {
-      pointer = (*pointer).right;
+    while (pointer->right != nullptr) {
+      pointer = pointer->right;
     }
 
-    Node* newRoot = treeToList((*root).left);
+    Node* newRoot = treeToList(root->left);
 
-    (*pointer).right = root;
-    (*root).left = pointer;
+    pointer->right = root;
+    root->left = pointer;
 
     return newRoot;
   }
@@ -53,8 +53,8 @@ int main() {
 
   Node* node = treeToList(&root);
   while (node != nullptr) {
-    cout << (*node).value << " ";
-    node = (*node).right;
+    cout << node->value << " ";
+    node = node->right;
   }
   cout << endl;
 }
