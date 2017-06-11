@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 struct Node {
@@ -43,14 +44,43 @@ Node* treeToList(Node* root) {
   return root;
 }
 
+vector<vector<int>> treeDepthToList(Node* root, int depth = 0, vector<vector<int>> lists = vector<vector<int>>()) {
+  if (lists.size() <= depth) {
+    lists.push_back(vector<int>());
+  }
+
+  lists[depth].push_back(root->value);
+
+  if (root->left != nullptr) {
+    lists = treeDepthToList(root->left, depth + 1, lists);
+  }
+
+  if (root->right != nullptr) {
+    lists = treeDepthToList(root->right, depth + 1, lists);
+  }
+
+  return lists;
+}
+
 int main() {
   Node a = Node(25);
   Node b = Node(30);
   Node c = Node(12, &a, &b);
-  Node d = Node(36);
+  Node f = Node(45);
+  Node d = Node(36, nullptr, &f);
   Node e = Node(15, &d);
   Node root = Node(10, &c, &e);
 
+  cout << "Depth List Tree:" << endl;
+  vector<vector<int>> result = treeDepthToList(&root);
+  for (auto itr = result.begin(); itr != result.end(); itr++) {
+    for (int val : *itr) {
+      cout << val << " ";
+    }
+    cout << endl;
+  }
+
+  cout << "Inorder Linked List Tree:" << endl;
   Node* node = treeToList(&root);
   while (node != nullptr) {
     cout << node->value << " ";
