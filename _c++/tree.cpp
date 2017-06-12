@@ -1,4 +1,5 @@
 #include <iostream>
+#include <climits>
 #include <vector>
 using namespace std;
 
@@ -44,6 +45,26 @@ Node* treeToList(Node* root) {
   return root;
 }
 
+bool isBinarySearchTree(Node* root, int lowerBound = INT_MIN, int upperBound = INT_MAX) {
+  if (root->value > upperBound || root->value < lowerBound) {
+    return false;
+  }
+
+  if (root->left != nullptr) {
+    if (!isBinarySearchTree(root->left, lowerBound, root->value)) {
+      return false;
+    }
+  }
+
+  if (root->right != nullptr) {
+    if (!isBinarySearchTree(root->right, root->value, upperBound)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 vector<vector<int>> treeDepthToList(Node* root, int depth = 0, vector<vector<int>> lists = vector<vector<int>>()) {
   if (lists.size() <= depth) {
     lists.push_back(vector<int>());
@@ -63,16 +84,15 @@ vector<vector<int>> treeDepthToList(Node* root, int depth = 0, vector<vector<int
 }
 
 int main() {
-  Node a = Node(25);
-  Node b = Node(30);
-  Node c = Node(12, &a, &b);
-  Node f = Node(45);
-  Node d = Node(36, nullptr, &f);
-  Node e = Node(15, &d);
-  Node root = Node(10, &c, &e);
+  Node* root = new Node(10);
+  root->left = new Node(12);
+  root->right = new Node(15);
+  root->left->left = new Node(25);
+  root->left->right = new Node(30);
+  root->right->left = new Node(36);
 
   cout << "Depth List Tree:" << endl;
-  vector<vector<int>> result = treeDepthToList(&root);
+  vector<vector<int>> result = treeDepthToList(root);
   for (auto itr = result.begin(); itr != result.end(); itr++) {
     for (int val : *itr) {
       cout << val << " ";
@@ -81,10 +101,19 @@ int main() {
   }
 
   cout << "Inorder Linked List Tree:" << endl;
-  Node* node = treeToList(&root);
+  Node* node = treeToList(root);
   while (node != nullptr) {
     cout << node->value << " ";
     node = node->right;
   }
   cout << endl;
+
+  root = new Node(4);
+  root->left = new Node(1);
+  root->right = new Node(10);
+  root->right->left = new Node(5);
+  root->right->right = new Node(16);
+
+  cout << "isBinarySearchTree():" << endl;
+  cout << boolalpha << isBinarySearchTree(root) << endl;
 }
